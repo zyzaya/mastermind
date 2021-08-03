@@ -15,8 +15,8 @@ class Input
     until valid
       input = gets.chomp.downcase
       # valid = valid_input.include?(input)
-      valid = yield(input)
-      puts retry_text unless @exit_code.include?(input) || valid
+      valid = yield(input) || @exit_code.include?(input)
+      puts retry_text unless valid
     end
     input
   end
