@@ -7,7 +7,9 @@ class Game
   COLOURS = %w[r o y g b i].freeze
   MAX_GUESSES = 12
   CODE_LENGTH = 4
-  
+  WHITE_PEG = 'w'
+  BLACK_PEG = 'b'
+
   EXIT_CODE = %w[e exit].freeze
   MAKER = %w[codemaker maker m].freeze
   BREAKER = %w[codebreaker breaker b].freeze
@@ -18,6 +20,11 @@ class Game
   GUESS_RETRY = 'Invalid input. Guess must be four characters' +
     'long and consists of "r", "o", "y", "g", "b", or "i"'
   REPLAY_RETRY = 'Invalid input. Please enter "y" to replay, "n" to quit, or "codemaker" to switch roles'
+  CODE_INFO = 'Enter code with a length of four and consisting of the characters roygbi'
+  CODE_RETRY = 'Invalid input. Code must be four characters' +
+    'long and consist of  "r", "o", "y", "g", "b", or "i"'
+  FEEDBACK_RETRY = 'Invalid input. Feedback must be four characters or less' +
+    'consisting of only "w" or "b"'
 
 
   def initialize
@@ -45,9 +52,7 @@ class Game
       puts "Code: #{@mastermind.code}"
       guess_info = "Enter #{ordinalize(num_guesses + 1)} guess:"
       guess = @input.get_input(guess_info, GUESS_RETRY) do |input|
-        input.length == CODE_LENGTH && input.each_char.all? do |c|
-          COLOURS.include?(c)
-        end
+        valid_code?(input)
       end
       return if EXIT_CODE.include?(guess)
 
@@ -55,14 +60,48 @@ class Game
       puts response
       num_guesses += 1
     end
-    end_game(guess, num_guesses)
+    end_game_as_code_maker(guess, num_guesses)
   end
 
   def play_as_codemaker
     puts 'playing as codemaker'
+    code = @input.get_input(CODE_INFO, CODE_RETRY) do |input|
+      valid_code?(input)
+    end
+    return if EXIT_CODE.include?(code)
+
+    @mastermind.code = code
+    guess = ''
+    num_guesses = 0
+    feedback = nil
+    until guess == @mastermind.code || num_guesses >= MAX_GUESSES
+        feedback_info = "Computer's #{ordinalize(num_guesses + 1)} guess is " +
+         "#{@mastermind.generate_guess(feedback)}. " +
+         "Enter feedback:"
+      feedback = @input.get_input(feedback_info, FEEDBACK_RETRY) do |input|
+        valid_feedback?(input)
+      end
+      num_guesses += 1
+    end
+
+    # generate guess
+    # get user response
+    puts @mastermind.code
   end
 
-  def end_game(final_guess, num_guesses)
+  def valid_code?(code)
+    all_valid_chars = code.each_char.all? { |c| COLOURS.include?(c) }
+    code.length == CODE_LENGTH && all_valid_chars
+  end
+
+  def valid_feedback?(input)
+    all_valid_chars = input.each_char.all? do |c|
+      c == WHITE_PEG || c == BLACK_PEG
+    end
+    input.length <= CODE_LENGTH && all_valid_chars
+  end
+
+  def end_game_as_code_maker(final_guess, num_guesses)
     if final_guess == @mastermind.code
       info = "Correct! You succeeded in #{num_guesses} guesses"
     else
