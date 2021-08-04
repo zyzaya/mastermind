@@ -2,7 +2,7 @@
 
 class Mastermind
   attr_accessor :code
-  
+
   def initialize(colours, code_length)
     @colours = colours
     @code_length = code_length
@@ -13,19 +13,20 @@ class Mastermind
 
   def generate_code
     @code = ''
-    @code_length.times {|i| @code += @colours[rand(@colours.length)]}
+    @code_length.times { @code += @colours[rand(@colours.length)] }
   end
 
   def generate_response(guess)
     response = Array.new(@code_length)
     @code.each_char.with_index do |c, i|
-      if c == guess[i]
-        response[i] = 'b'
-      elsif guess.split('').each_index.select { |j| response[j] != 'b' && guess[j] == c}.length > 0
-        response[i] = 'w'
-      else
-        response[i] = '_'
-      end
+      response[i] =
+        if c == guess[i]
+          'b'
+        elsif guess.split('').each_index.select { |j| response[j] != 'b' && guess[j] == c }.length.postitive?
+          'w'
+        else
+          '_'
+        end
     end
     white = Array.new(response.count('w'), 'w').join
     black = Array.new(response.count('b'), 'b').join
@@ -40,10 +41,10 @@ class Mastermind
         guess = @last_guess.shuffle
       else
         diff = response.length - @background_digits
-        guess = @last_guess.take(diff) if diff > 0
+        guess = @last_guess.take(diff) if diff.postitive?
         next_colour = @colours.index(@last_guess.last) + 1
         next_colour = @colours[next_colour]
-        guess = guess + Array.new(@code_length - guess.length, next_colour)
+        guess += Array.new(@code_length - guess.length, next_colour)
       end
     else
       @background_digits = 0
