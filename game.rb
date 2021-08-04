@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'input'
 require_relative 'mastermind'
 require_relative 'ordinalize'
@@ -13,19 +14,18 @@ class Game
   EXIT_CODE = %w[e exit].freeze
   MAKER = %w[codemaker maker m].freeze
   BREAKER = %w[codebreaker breaker b].freeze
-  YES = %w[yes y]
-  NO = %w[no n]
-  START_INFO = 'Play as codemaker or codebreaker?'.freeze
-  START_RETRY = 'Invalid input. Please enter "codemaker" or "codebreaker"'.freeze
-  GUESS_RETRY = 'Invalid input. Guess must be four characters' +
+  YES = %w[yes y].freeze
+  NO = %w[no n].freeze
+  START_INFO = 'Play as codemaker or codebreaker?'
+  START_RETRY = 'Invalid input. Please enter "codemaker" or "codebreaker"'
+  GUESS_RETRY = 'Invalid input. Guess must be four characters'\
     'long and consists of "r", "o", "y", "g", "b", or "i"'
   REPLAY_RETRY = 'Invalid input. Please enter "y" to replay, "n" to quit, or "codemaker" to switch roles'
   CODE_INFO = 'Enter code with a length of four and consisting of the characters roygbi'
-  CODE_RETRY = 'Invalid input. Code must be four characters' +
+  CODE_RETRY = 'Invalid input. Code must be four characters'\
     'long and consist of  "r", "o", "y", "g", "b", or "i"'
-  FEEDBACK_RETRY = 'Invalid input. Feedback must be four characters or less' +
+  FEEDBACK_RETRY = 'Invalid input. Feedback must be four characters or less'\
     'consisting of only "w" or "b"'
-
 
   def initialize
     @input = Input.new(EXIT_CODE)
@@ -44,7 +44,6 @@ class Game
   private
 
   def play_as_codebreaker
-    puts 'playing as codebreaker'
     @mastermind.generate_code
     num_guesses = 0
     guess = ''
@@ -64,7 +63,6 @@ class Game
   end
 
   def play_as_codemaker
-    puts 'playing as codemaker'
     code = @input.get_input(CODE_INFO, CODE_RETRY) do |input|
       valid_code?(input)
     end
@@ -75,9 +73,9 @@ class Game
     num_guesses = 0
     feedback = nil
     until guess == @mastermind.code || num_guesses >= MAX_GUESSES
-        feedback_info = "Computer's #{ordinalize(num_guesses + 1)} guess is " +
-         "#{@mastermind.generate_guess(feedback)}. " +
-         "Enter feedback:"
+      feedback_info = "Computer's #{ordinalize(num_guesses + 1)} guess is "\
+         "#{@mastermind.generate_guess(feedback)}. "\
+         'Enter feedback:'
       feedback = @input.get_input(feedback_info, FEEDBACK_RETRY) do |input|
         valid_feedback?(input)
       end
@@ -93,17 +91,18 @@ class Game
 
   def valid_feedback?(input)
     all_valid_chars = input.each_char.all? do |c|
-      c == WHITE_PEG || c == BLACK_PEG
+      [WHITE_PEG, BLACK_PEG].include?(c)
     end
     input.length <= CODE_LENGTH && all_valid_chars
   end
 
   def end_game_as_code_breaker(final_guess, num_guesses)
-    if final_guess == @mastermind.code
-      info = "Correct! You succeeded in #{num_guesses} guesses"
-    else
-      info = "You've run out of guesses. The correct code was #{@mastermind.code}"
-    end
+    info =
+      if final_guess == @mastermind.code
+        "Correct! You succeeded in #{num_guesses} guesses"
+      else
+        "You've run out of guesses. The correct code was #{@mastermind.code}"
+      end
     info += "\nPlay again? (y/n). Or enter \"codemaker\" to switch roles."
     replay = @input.get_input(info, REPLAY_RETRY) { |input| (YES + NO + MAKER).include?(input) }
     if YES.include?(replay) then play_as_codebreaker
@@ -111,11 +110,12 @@ class Game
   end
 
   def end_game_as_code_maker(final_guess, num_guesses)
-    if final_guess == @mastermind.code
-      info = "Computer succeed in #{num_guesses} guesses."
-    else
-      info = "You win! The computer has failed to guess your code!"
-    end
+    info =
+      if final_guess == @mastermind.code
+        "Computer succeed in #{num_guesses} guesses."
+      else
+        'You win! The computer has failed to guess your code!'
+      end
     info += "\nPlay again? (y/n). Or enter \"codebreaker\" to switch roles."
     replay = @input.get_input(info, REPLAY_RETRY) { |input| (YES + NO + BREAKER).include?(input) }
     if YES.include?(replay) then play_as_codebreaker
