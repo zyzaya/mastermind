@@ -33,7 +33,7 @@ class Mastermind
   end
 
   def generate_guess(response = nil)
-    guess = Array.new(@code_length)
+    guess = []
     if response
       @last_guess = @last_guess.split('')
       if response.length == @code_length

@@ -60,7 +60,7 @@ class Game
       puts response
       num_guesses += 1
     end
-    end_game_as_code_maker(guess, num_guesses)
+    end_game_as_code_breaker(guess, num_guesses)
   end
 
   def play_as_codemaker
@@ -83,10 +83,7 @@ class Game
       end
       num_guesses += 1
     end
-
-    # generate guess
-    # get user response
-    puts @mastermind.code
+    end_game_as_code_maker(guess, num_guesses)
   end
 
   def valid_code?(code)
@@ -101,7 +98,7 @@ class Game
     input.length <= CODE_LENGTH && all_valid_chars
   end
 
-  def end_game_as_code_maker(final_guess, num_guesses)
+  def end_game_as_code_breaker(final_guess, num_guesses)
     if final_guess == @mastermind.code
       info = "Correct! You succeeded in #{num_guesses} guesses"
     else
@@ -109,6 +106,18 @@ class Game
     end
     info += "\nPlay again? (y/n). Or enter \"codemaker\" to switch roles."
     replay = @input.get_input(info, REPLAY_RETRY) { |input| (YES + NO + MAKER).include?(input) }
+    if YES.include?(replay) then play_as_codebreaker
+    elsif MAKER.include?(replay) then play_as_codemaker end
+  end
+
+  def end_game_as_code_maker(final_guess, num_guesses)
+    if final_guess == @mastermind.code
+      info = "Computer succeed in #{num_guesses} guesses."
+    else
+      info = "You win! The computer has failed to guess your code!"
+    end
+    info += "\nPlay again? (y/n). Or enter \"codebreaker\" to switch roles."
+    replay = @input.get_input(info, REPLAY_RETRY) { |input| (YES + NO + BREAKER).include?(input) }
     if YES.include?(replay) then play_as_codebreaker
     elsif MAKER.include?(replay) then play_as_codemaker end
   end
