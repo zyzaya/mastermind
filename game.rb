@@ -48,8 +48,8 @@ class Game
     num_guesses = 0
     guess = ''
     until guess == @mastermind.code || num_guesses >= MAX_GUESSES
-      puts "Code: #{@mastermind.code}"
-      guess_info = "Enter #{ordinalize(num_guesses + 1)} guess:"
+      # puts "Code: #{@mastermind.code}"
+      guess_info = "Enter #{ordinalize(num_guesses + 1)} guess (four of the characters r, o, y, g, b, or i):"
       guess = @input.get_input(guess_info, GUESS_RETRY) do |input|
         valid_code?(input)
       end
