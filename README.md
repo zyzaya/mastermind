@@ -26,8 +26,11 @@ If the code is <code>royg</code> and the guess is <code>rbiy</code> the feedback
 **As a codemaker**
 
 As prompted, enter a four character code consisting of the characters **r**, **o**, **y**, **g**, **b**, or **i**.
-After each guess the computer provide feedback using **w** and **b**.
+After each guess the computer provide feedback using up to four characters of **w** and **b**. 
+The number of **w** characters is the number of correct pegs in the incorrect position.
+The number of **b** characters is the number of correct pegs in the correct position.
 
+If the code is <code>royg</code> and the computer guesses <code>rbiy</code> then the feedback given should be <code>wwb</code>. The order of the **w** and **b** characters doesn't matter.
 
 ## Features
 
