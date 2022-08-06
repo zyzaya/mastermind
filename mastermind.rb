@@ -22,7 +22,7 @@ class Mastermind
       response[i] =
         if c == guess[i]
           'b'
-        elsif guess.split('').each_index.select { |j| response[j] != 'b' && guess[j] == c }.length.postitive?
+        elsif guess.split('').each_index.select { |j| response[j] != 'b' && guess[j] == c }.length.positive?
           'w'
         else
           '_'
