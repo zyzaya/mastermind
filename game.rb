@@ -19,13 +19,13 @@ class Game
   START_INFO = 'Play as codemaker or codebreaker?'
   START_RETRY = 'Invalid input. Please enter "codemaker" or "codebreaker"'
   GUESS_RETRY = 'Invalid input. Guess must be four characters'\
-    'long and consists of "r", "o", "y", "g", "b", or "i"'
+    ' long and consists of "r", "o", "y", "g", "b", or "i"'
   REPLAY_RETRY = 'Invalid input. Please enter "y" to replay, "n" to quit, or "codemaker" to switch roles'
   CODE_INFO = 'Enter code with a length of four and consisting of the characters roygbi'
   CODE_RETRY = 'Invalid input. Code must be four characters'\
-    'long and consist of  "r", "o", "y", "g", "b", or "i"'
+    ' long and consist of  "r", "o", "y", "g", "b", or "i"'
   FEEDBACK_RETRY = 'Invalid input. Feedback must be four characters or less'\
-    'consisting of only "w" or "b"'
+    ' consisting of only "w" or "b"'
 
   def initialize
     @input = Input.new(EXIT_CODE)
