@@ -41,7 +41,7 @@ class Mastermind
         guess = @last_guess.shuffle
       else
         diff = response.length - @background_digits
-        guess = @last_guess.take(diff) if diff.postitive?
+        guess = @last_guess.take(diff) if diff.positive?
         next_colour = @colours.index(@last_guess.last) + 1
         next_colour = @colours[next_colour]
         guess += Array.new(@code_length - guess.length, next_colour)
