@@ -79,6 +79,8 @@ class Game
       feedback = @input.get_input(feedback_info, FEEDBACK_RETRY) do |input|
         valid_feedback?(input)
       end
+      return if EXIT_CODE.include?(feedback)
+      
       num_guesses += 1
     end
     end_game_as_code_maker(guess, num_guesses)
